@@ -22,7 +22,7 @@
 - [x] 3.2 Implement User entity with role definitions
 - [x] 3.3 Implement BorrowRecord entity
 - [x] 3.4 Implement BookCopy entity
-- [ ] 3.5 Define domain error types
+- [x] 3.5 Define domain error types
 - [x] 3.6 Implement value objects (ISBN, Email, etc.)
 
 ## 4. Repository Interfaces
