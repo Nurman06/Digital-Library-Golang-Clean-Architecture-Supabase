@@ -26,10 +26,10 @@
 - [x] 3.6 Implement value objects (ISBN, Email, etc.)
 
 ## 4. Repository Interfaces
-- [ ] 4.1 Define BookRepository interface
-- [ ] 4.2 Define UserRepository interface
-- [ ] 4.3 Define BorrowRecordRepository interface
-- [ ] 4.4 Define BookCopyRepository interface
+- [x] 4.1 Define BookRepository interface
+- [x] 4.2 Define UserRepository interface
+- [x] 4.3 Define BorrowRecordRepository interface
+- [x] 4.4 Define BookCopyRepository interface
 
 ## 5. Use Case Layer (Business Logic)
 - [ ] 5.1 Implement BookUseCase (CRUD operations)
