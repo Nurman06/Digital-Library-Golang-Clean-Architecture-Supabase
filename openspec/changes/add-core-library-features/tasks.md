@@ -14,8 +14,8 @@
 - [x] 2.3 Design and create borrow_records table schema
 - [x] 2.4 Design and create book_copies table schema
 - [x] 2.5 Create database indexes for performance
-- [ ] 2.6 Set up Supabase Row Level Security (RLS) policies
-- [x] 2.7 Create database migration scripts
+- [x] 2.6 Set up Supabase Row Level Security (RLS) policies
+- [x] 2.7 Create database migration scripts (including rollback scripts and documentation)
 
 ## 3. Entity Layer (Domain Models)
 - [x] 3.1 Implement Book entity with validation
