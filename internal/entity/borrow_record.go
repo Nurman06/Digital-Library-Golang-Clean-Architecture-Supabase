@@ -7,17 +7,17 @@ import (
 
 // BorrowRecord represents a borrowing transaction
 type BorrowRecord struct {
-	ID           string              `json:"id"`
-	UserID       string              `json:"user_id"`
-	BookCopyID   string              `json:"book_copy_id"`
-	CheckoutDate time.Time           `json:"checkout_date"`
-	DueDate      time.Time           `json:"due_date"`
-	ReturnDate   *time.Time          `json:"return_date,omitempty"`
-	RenewalCount int                 `json:"renewal_count"`
-	LateFee      float64             `json:"late_fee"`
-	Status       BorrowRecordStatus  `json:"status"`
-	CreatedAt    time.Time           `json:"created_at"`
-	UpdatedAt    time.Time           `json:"updated_at"`
+	ID           string             `json:"id"`
+	UserID       string             `json:"user_id"`
+	BookCopyID   string             `json:"book_copy_id"`
+	CheckoutDate time.Time          `json:"checkout_date"`
+	DueDate      time.Time          `json:"due_date"`
+	ReturnDate   *time.Time         `json:"return_date,omitempty"`
+	RenewalCount int                `json:"renewal_count"`
+	LateFee      float64            `json:"late_fee"`
+	Status       BorrowRecordStatus `json:"status"`
+	CreatedAt    time.Time          `json:"created_at"`
+	UpdatedAt    time.Time          `json:"updated_at"`
 }
 
 // BorrowRecordStatus represents the status of a borrow record
@@ -88,9 +88,9 @@ func (br *BorrowRecord) IsOverdue() bool {
 
 // CanRenew checks if the borrow record can be renewed
 func (br *BorrowRecord) CanRenew() bool {
-	return br.Status == BorrowStatusActive && 
-		   br.RenewalCount < MaxRenewalCount && 
-		   !br.IsOverdue()
+	return br.Status == BorrowStatusActive &&
+		br.RenewalCount < MaxRenewalCount &&
+		!br.IsOverdue()
 }
 
 // CalculateLateFee calculates the late fee based on overdue days
@@ -98,12 +98,12 @@ func (br *BorrowRecord) CalculateLateFee() float64 {
 	if br.ReturnDate == nil || br.ReturnDate.Before(br.DueDate) || br.ReturnDate.Equal(br.DueDate) {
 		return 0
 	}
-	
+
 	overdueDays := int(br.ReturnDate.Sub(br.DueDate).Hours() / 24)
 	if overdueDays <= 0 {
 		return 0
 	}
-	
+
 	lateFee := float64(overdueDays) * LateFeePerDay
 	if lateFee > MaxLateFee {
 		return MaxLateFee
@@ -116,12 +116,12 @@ func (br *BorrowRecord) CalculateCurrentLateFee() float64 {
 	if br.Status != BorrowStatusActive || !br.IsOverdue() {
 		return 0
 	}
-	
+
 	overdueDays := int(time.Since(br.DueDate).Hours() / 24)
 	if overdueDays <= 0 {
 		return 0
 	}
-	
+
 	lateFee := float64(overdueDays) * LateFeePerDay
 	if lateFee > MaxLateFee {
 		return MaxLateFee
@@ -134,7 +134,7 @@ func (br *BorrowRecord) GetOverdueDays() int {
 	if !br.IsOverdue() {
 		return 0
 	}
-	
+
 	days := int(time.Since(br.DueDate).Hours() / 24)
 	if days < 0 {
 		return 0
@@ -157,11 +157,11 @@ func (br *BorrowRecord) Renew() error {
 	if !br.CanRenew() {
 		return errors.New("book cannot be renewed")
 	}
-	
+
 	br.DueDate = br.DueDate.Add(DefaultBorrowingPeriod)
 	br.RenewalCount++
 	br.UpdatedAt = time.Now()
-	
+
 	return nil
 }
 
@@ -170,13 +170,13 @@ func (br *BorrowRecord) Return() error {
 	if br.Status == BorrowStatusReturned {
 		return errors.New("book has already been returned")
 	}
-	
+
 	now := time.Now()
 	br.ReturnDate = &now
 	br.Status = BorrowStatusReturned
 	br.LateFee = br.CalculateLateFee()
 	br.UpdatedAt = now
-	
+
 	return nil
 }
 
@@ -193,7 +193,7 @@ func (br *BorrowRecord) GetDaysRemaining() int {
 	if br.Status != BorrowStatusActive {
 		return 0
 	}
-	
+
 	duration := time.Until(br.DueDate)
 	return int(duration.Hours() / 24)
 }

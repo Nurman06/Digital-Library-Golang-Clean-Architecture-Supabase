@@ -77,7 +77,7 @@ func setupRoutes(router *mux.Router, _ *supabase.Client, _ *config.Config, appLo
 
 	// API v1 routes will be added here
 	apiV1 := router.PathPrefix("/api/v1").Subrouter()
-	
+
 	// Placeholder for future routes
 	apiV1.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")

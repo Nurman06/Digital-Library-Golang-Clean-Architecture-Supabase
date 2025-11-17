@@ -17,42 +17,42 @@ type ErrorCode string
 
 const (
 	// Validation errors
-	ErrCodeValidation ErrorCode = "VALIDATION_ERROR"
-	ErrCodeInvalidISBN ErrorCode = "INVALID_ISBN"
-	ErrCodeInvalidEmail ErrorCode = "INVALID_EMAIL"
-	ErrCodeInvalidRole ErrorCode = "INVALID_ROLE"
+	ErrCodeValidation    ErrorCode = "VALIDATION_ERROR"
+	ErrCodeInvalidISBN   ErrorCode = "INVALID_ISBN"
+	ErrCodeInvalidEmail  ErrorCode = "INVALID_EMAIL"
+	ErrCodeInvalidRole   ErrorCode = "INVALID_ROLE"
 	ErrCodeInvalidStatus ErrorCode = "INVALID_STATUS"
-	ErrCodeInvalidDate ErrorCode = "INVALID_DATE"
-	
+	ErrCodeInvalidDate   ErrorCode = "INVALID_DATE"
+
 	// Business logic errors
-	ErrCodeNotFound ErrorCode = "NOT_FOUND"
-	ErrCodeConflict ErrorCode = "CONFLICT"
+	ErrCodeNotFound     ErrorCode = "NOT_FOUND"
+	ErrCodeConflict     ErrorCode = "CONFLICT"
 	ErrCodeUnauthorized ErrorCode = "UNAUTHORIZED"
-	ErrCodeForbidden ErrorCode = "FORBIDDEN"
-	
+	ErrCodeForbidden    ErrorCode = "FORBIDDEN"
+
 	// Book-specific errors
-	ErrCodeBookNotAvailable ErrorCode = "BOOK_NOT_AVAILABLE"
-	ErrCodeDuplicateISBN ErrorCode = "DUPLICATE_ISBN"
+	ErrCodeBookNotAvailable     ErrorCode = "BOOK_NOT_AVAILABLE"
+	ErrCodeDuplicateISBN        ErrorCode = "DUPLICATE_ISBN"
 	ErrCodeBookHasActiveBorrows ErrorCode = "BOOK_HAS_ACTIVE_BORROWS"
-	
+
 	// Borrowing-specific errors
 	ErrCodeBorrowingLimitReached ErrorCode = "BORROWING_LIMIT_REACHED"
-	ErrCodeOverdueBooks ErrorCode = "OVERDUE_BOOKS"
-	ErrCodeUnpaidLateFees ErrorCode = "UNPAID_LATE_FEES"
-	ErrCodeCannotRenew ErrorCode = "CANNOT_RENEW"
-	ErrCodeAlreadyReturned ErrorCode = "ALREADY_RETURNED"
-	ErrCodeNotBorrowed ErrorCode = "NOT_BORROWED"
-	
+	ErrCodeOverdueBooks          ErrorCode = "OVERDUE_BOOKS"
+	ErrCodeUnpaidLateFees        ErrorCode = "UNPAID_LATE_FEES"
+	ErrCodeCannotRenew           ErrorCode = "CANNOT_RENEW"
+	ErrCodeAlreadyReturned       ErrorCode = "ALREADY_RETURNED"
+	ErrCodeNotBorrowed           ErrorCode = "NOT_BORROWED"
+
 	// User-specific errors
-	ErrCodeUserSuspended ErrorCode = "USER_SUSPENDED"
-	ErrCodeUserExpired ErrorCode = "USER_EXPIRED"
-	ErrCodeDuplicateEmail ErrorCode = "DUPLICATE_EMAIL"
+	ErrCodeUserSuspended        ErrorCode = "USER_SUSPENDED"
+	ErrCodeUserExpired          ErrorCode = "USER_EXPIRED"
+	ErrCodeDuplicateEmail       ErrorCode = "DUPLICATE_EMAIL"
 	ErrCodeUserHasActiveBorrows ErrorCode = "USER_HAS_ACTIVE_BORROWS"
-	
+
 	// Reservation-specific errors
-	ErrCodeReservationExpired ErrorCode = "RESERVATION_EXPIRED"
+	ErrCodeReservationExpired  ErrorCode = "RESERVATION_EXPIRED"
 	ErrCodeReservationNotFound ErrorCode = "RESERVATION_NOT_FOUND"
-	
+
 	// Internal errors
 	ErrCodeInternal ErrorCode = "INTERNAL_ERROR"
 )

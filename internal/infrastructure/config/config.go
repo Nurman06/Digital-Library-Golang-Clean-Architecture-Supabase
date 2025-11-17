@@ -36,14 +36,14 @@ type DatabaseConfig struct {
 
 // SupabaseConfig holds Supabase configuration
 type SupabaseConfig struct {
-	URL       string
-	AnonKey   string
+	URL        string
+	AnonKey    string
 	ServiceKey string
 }
 
 // JWTConfig holds JWT configuration
 type JWTConfig struct {
-	Secret     string
+	Secret      string
 	ExpiryHours int
 }
 
