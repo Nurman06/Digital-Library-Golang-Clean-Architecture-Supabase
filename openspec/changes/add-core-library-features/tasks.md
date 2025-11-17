@@ -22,7 +22,7 @@
 - [x] 3.2 Implement User entity with role definitions
 - [x] 3.3 Implement BorrowRecord entity
 - [x] 3.4 Implement BookCopy entity
-- [x] 3.5 Define domain error types
+- [ ] 3.5 Define domain error types
 - [x] 3.6 Implement value objects (ISBN, Email, etc.)
 
 ## 4. Repository Interfaces
@@ -38,9 +38,9 @@
 - [ ] 5.4 Implement BorrowingUseCase (checkout, return, renewal)
 - [ ] 5.5 Implement SearchUseCase (book search by various criteria)
 - [ ] 5.6 Implement AvailabilityUseCase (real-time availability tracking)
-- [ ] 5.7 Implement late fee calculation logic
-- [ ] 5.8 Implement borrowing limit validation
-- [ ] 5.9 Implement due date calculation logic
+- [ ] 5.7 Implement late fee calculation logic (logic sudah ada di entity, perlu di use case)
+- [ ] 5.8 Implement borrowing limit validation (logic sudah ada di entity, perlu di use case)
+- [ ] 5.9 Implement due date calculation logic (konstanta sudah ada di entity, perlu di use case)
 
 ## 6. Repository Implementations
 - [ ] 6.1 Implement PostgresBookRepository
