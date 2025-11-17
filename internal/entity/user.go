@@ -130,3 +130,99 @@ func (u *User) HasPermission(operation string) bool {
 	}
 	return false
 }
+
+// IsSuspended checks if the user account is suspended
+func (u *User) IsSuspended() bool {
+	return u.Status == StatusSuspended
+}
+
+// IsExpired checks if the user account is expired
+func (u *User) IsExpired() bool {
+	return u.Status == StatusExpired
+}
+
+// IsAdmin checks if the user has admin role
+func (u *User) IsAdmin() bool {
+	return u.Role == RoleAdmin
+}
+
+// IsLibrarian checks if the user has librarian role
+func (u *User) IsLibrarian() bool {
+	return u.Role == RoleLibrarian
+}
+
+// IsMember checks if the user has member role
+func (u *User) IsMember() bool {
+	return u.Role == RoleMember
+}
+
+// CanManageBooks checks if the user can manage books
+func (u *User) CanManageBooks() bool {
+	return u.Role == RoleAdmin || u.Role == RoleLibrarian
+}
+
+// CanManageUsers checks if the user can manage other users
+func (u *User) CanManageUsers() bool {
+	return u.Role == RoleAdmin
+}
+
+// CanDeleteBooks checks if the user can delete books
+func (u *User) CanDeleteBooks() bool {
+	return u.Role == RoleAdmin
+}
+
+// Suspend suspends the user account
+func (u *User) Suspend() error {
+	if u.Status == StatusSuspended {
+		return errors.New("user is already suspended")
+	}
+	u.Status = StatusSuspended
+	u.UpdatedAt = time.Now()
+	return nil
+}
+
+// Activate activates the user account
+func (u *User) Activate() error {
+	if u.Status == StatusActive {
+		return errors.New("user is already active")
+	}
+	u.Status = StatusActive
+	u.UpdatedAt = time.Now()
+	return nil
+}
+
+// Expire marks the user account as expired
+func (u *User) Expire() error {
+	if u.Status == StatusExpired {
+		return errors.New("user is already expired")
+	}
+	u.Status = StatusExpired
+	u.UpdatedAt = time.Now()
+	return nil
+}
+
+// UpdateBorrowingLimit updates the user's borrowing limit
+func (u *User) UpdateBorrowingLimit(newLimit int) error {
+	if newLimit < 0 {
+		return errors.New("borrowing limit cannot be negative")
+	}
+	u.BorrowingLimit = newLimit
+	u.UpdatedAt = time.Now()
+	return nil
+}
+
+// HasUnlimitedBorrowing checks if the user has unlimited borrowing capacity
+func (u *User) HasUnlimitedBorrowing() bool {
+	return u.Role == RoleAdmin && u.BorrowingLimit == 0
+}
+
+// CanBorrowMoreBooks checks if the user can borrow more books based on current count
+func (u *User) CanBorrowMoreBooks(currentBorrowCount int) bool {
+	if !u.CanBorrow() {
+		return false
+	}
+	if u.HasUnlimitedBorrowing() {
+		return true
+	}
+	return currentBorrowCount < u.BorrowingLimit
+}

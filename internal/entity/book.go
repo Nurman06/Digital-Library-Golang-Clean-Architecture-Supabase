@@ -106,3 +106,90 @@ func isValidCopyStatus(status CopyStatus) bool {
 func (bc *BookCopy) IsAvailable() bool {
 	return bc.Status == CopyStatusAvailable
 }
+
+// IsBorrowed checks if the book copy is currently borrowed
+func (bc *BookCopy) IsBorrowed() bool {
+	return bc.Status == CopyStatusBorrowed
+}
+
+// IsReserved checks if the book copy is reserved
+func (bc *BookCopy) IsReserved() bool {
+	return bc.Status == CopyStatusReserved
+}
+
+// IsDamaged checks if the book copy is damaged
+func (bc *BookCopy) IsDamaged() bool {
+	return bc.Status == CopyStatusDamaged
+}
+
+// IsLost checks if the book copy is lost
+func (bc *BookCopy) IsLost() bool {
+	return bc.Status == CopyStatusLost
+}
+
+// CanBeBorrowed checks if the book copy can be borrowed
+func (bc *BookCopy) CanBeBorrowed() bool {
+	return bc.Status == CopyStatusAvailable
+}
+
+// MarkAsBorrowed updates the book copy status to borrowed
+func (bc *BookCopy) MarkAsBorrowed() error {
+	if !bc.CanBeBorrowed() {
+		return errors.New("book copy is not available for borrowing")
+	}
+	bc.Status = CopyStatusBorrowed
+	bc.UpdatedAt = time.Now()
+	return nil
+}
+
+// MarkAsAvailable updates the book copy status to available
+func (bc *BookCopy) MarkAsAvailable() error {
+	if bc.Status == CopyStatusLost {
+		return errors.New("lost book copy cannot be marked as available")
+	}
+	bc.Status = CopyStatusAvailable
+	bc.UpdatedAt = time.Now()
+	return nil
+}
+
+// MarkAsReserved updates the book copy status to reserved
+func (bc *BookCopy) MarkAsReserved() error {
+	if bc.Status != CopyStatusAvailable {
+		return errors.New("only available book copies can be reserved")
+	}
+	bc.Status = CopyStatusReserved
+	bc.UpdatedAt = time.Now()
+	return nil
+}
+
+// MarkAsDamaged updates the book copy status to damaged
+func (bc *BookCopy) MarkAsDamaged() error {
+	bc.Status = CopyStatusDamaged
+	bc.UpdatedAt = time.Now()
+	return nil
+}
+
+// MarkAsLost updates the book copy status to lost
+func (bc *BookCopy) MarkAsLost() error {
+	bc.Status = CopyStatusLost
+	bc.UpdatedAt = time.Now()
+	return nil
+}
+
+// IsDeleted checks if the book is soft-deleted
+func (b *Book) IsDeleted() bool {
+	return b.DeletedAt != nil
+}
+
+// SoftDelete marks the book as deleted
+func (b *Book) SoftDelete() {
+	now := time.Now()
+	b.DeletedAt = &now
+	b.UpdatedAt = now
+}
+
+// Restore restores a soft-deleted book
+func (b *Book) Restore() {
+	b.DeletedAt = nil
+	b.UpdatedAt = time.Now()
+}
