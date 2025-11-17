@@ -8,7 +8,7 @@ import (
 type DomainError struct {
 	Code    ErrorCode
 	Message string
-	Details map[string]interface{}
+	Details map[string]any
 	Err     error
 }
 
@@ -75,12 +75,12 @@ func NewDomainError(code ErrorCode, message string) *DomainError {
 	return &DomainError{
 		Code:    code,
 		Message: message,
-		Details: make(map[string]interface{}),
+		Details: make(map[string]any),
 	}
 }
 
 // NewDomainErrorWithDetails creates a new domain error with details
-func NewDomainErrorWithDetails(code ErrorCode, message string, details map[string]interface{}) *DomainError {
+func NewDomainErrorWithDetails(code ErrorCode, message string, details map[string]any) *DomainError {
 	return &DomainError{
 		Code:    code,
 		Message: message,
@@ -93,15 +93,15 @@ func WrapError(code ErrorCode, message string, err error) *DomainError {
 	return &DomainError{
 		Code:    code,
 		Message: message,
-		Details: make(map[string]interface{}),
+		Details: make(map[string]any),
 		Err:     err,
 	}
 }
 
 // AddDetail adds a detail to the error
-func (e *DomainError) AddDetail(key string, value interface{}) *DomainError {
+func (e *DomainError) AddDetail(key string, value any) *DomainError {
 	if e.Details == nil {
-		e.Details = make(map[string]interface{})
+		e.Details = make(map[string]any)
 	}
 	e.Details[key] = value
 	return e
@@ -139,7 +139,7 @@ func NewBookNotAvailableError(bookID string) *DomainError {
 	return NewDomainErrorWithDetails(
 		ErrCodeBookNotAvailable,
 		"Book is not available for borrowing",
-		map[string]interface{}{"book_id": bookID},
+		map[string]any{"book_id": bookID},
 	)
 }
 
@@ -148,7 +148,7 @@ func NewBorrowingLimitReachedError(userID string, limit int) *DomainError {
 	return NewDomainErrorWithDetails(
 		ErrCodeBorrowingLimitReached,
 		fmt.Sprintf("Borrowing limit of %d books reached", limit),
-		map[string]interface{}{
+		map[string]any{
 			"user_id": userID,
 			"limit":   limit,
 		},
@@ -160,7 +160,7 @@ func NewOverdueBooksError(userID string, overdueCount int) *DomainError {
 	return NewDomainErrorWithDetails(
 		ErrCodeOverdueBooks,
 		fmt.Sprintf("User has %d overdue books", overdueCount),
-		map[string]interface{}{
+		map[string]any{
 			"user_id":       userID,
 			"overdue_count": overdueCount,
 		},
@@ -172,7 +172,7 @@ func NewCannotRenewError(reason string) *DomainError {
 	return NewDomainErrorWithDetails(
 		ErrCodeCannotRenew,
 		"Book cannot be renewed",
-		map[string]interface{}{"reason": reason},
+		map[string]any{"reason": reason},
 	)
 }
 
@@ -181,7 +181,7 @@ func NewUserSuspendedError(userID string) *DomainError {
 	return NewDomainErrorWithDetails(
 		ErrCodeUserSuspended,
 		"User account is suspended",
-		map[string]interface{}{"user_id": userID},
+		map[string]any{"user_id": userID},
 	)
 }
 
@@ -190,7 +190,7 @@ func NewDuplicateISBNError(isbn string) *DomainError {
 	return NewDomainErrorWithDetails(
 		ErrCodeDuplicateISBN,
 		"A book with this ISBN already exists",
-		map[string]interface{}{"isbn": isbn},
+		map[string]any{"isbn": isbn},
 	)
 }
 
@@ -199,6 +199,6 @@ func NewDuplicateEmailError(email string) *DomainError {
 	return NewDomainErrorWithDetails(
 		ErrCodeDuplicateEmail,
 		"A user with this email already exists",
-		map[string]interface{}{"email": email},
+		map[string]any{"email": email},
 	)
 }
