@@ -6,6 +6,8 @@ This directory contains SQL migration scripts for the Digital Library Management
 
 - `001_create_tables.sql` - Initial schema creation (up migration)
 - `001_create_tables_down.sql` - Rollback script for initial schema (down migration)
+- `002_setup_rls_policies.sql` - Row Level Security policies setup (up migration)
+- `002_setup_rls_policies_down.sql` - Rollback script for RLS policies (down migration)
 
 ## Database Schema Overview
 
@@ -16,6 +18,16 @@ The schema includes the following tables:
 3. **users** - Stores user profiles extending Supabase Auth
 4. **borrow_records** - Records all borrowing transactions with history
 5. **reservations** - Manages book reservation queue system
+
+### Row Level Security (RLS) Policies
+
+Migration 002 implements comprehensive RLS policies for data security:
+
+- **Books**: Public read access, admin/librarian write access
+- **Book Copies**: Public read access, admin/librarian management
+- **Users**: Self-profile access, admin full access
+- **Borrow Records**: Users see own records, staff see all
+- **Reservations**: Users manage own reservations, staff manage all
 
 ## Running Migrations
 
