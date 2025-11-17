@@ -32,15 +32,15 @@
 - [x] 4.4 Define BookCopyRepository interface
 
 ## 5. Use Case Layer (Business Logic)
-- [ ] 5.1 Implement BookUseCase (CRUD operations)
-- [ ] 5.2 Implement UserUseCase (registration, profile management)
-- [ ] 5.3 Implement AuthUseCase (login, token validation)
-- [ ] 5.4 Implement BorrowingUseCase (checkout, return, renewal)
-- [ ] 5.5 Implement SearchUseCase (book search by various criteria)
-- [ ] 5.6 Implement AvailabilityUseCase (real-time availability tracking)
-- [ ] 5.7 Implement late fee calculation logic (logic sudah ada di entity, perlu di use case)
-- [ ] 5.8 Implement borrowing limit validation (logic sudah ada di entity, perlu di use case)
-- [ ] 5.9 Implement due date calculation logic (konstanta sudah ada di entity, perlu di use case)
+- [x] 5.1 Implement BookUseCase (CRUD operations)
+- [x] 5.2 Implement UserUseCase (registration, profile management)
+- [x] 5.3 Implement AuthUseCase (login, token validation)
+- [x] 5.4 Implement BorrowingUseCase (checkout, return, renewal)
+- [x] 5.5 Implement SearchUseCase (book search by various criteria)
+- [x] 5.6 Implement AvailabilityUseCase (real-time availability tracking)
+- [x] 5.7 Implement late fee calculation logic (logic sudah ada di entity, perlu di use case)
+- [x] 5.8 Implement borrowing limit validation (logic sudah ada di entity, perlu di use case)
+- [x] 5.9 Implement due date calculation logic (konstanta sudah ada di entity, perlu di use case)
 
 ## 6. Repository Implementations
 - [ ] 6.1 Implement PostgresBookRepository
