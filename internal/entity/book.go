@@ -8,15 +8,15 @@ import (
 
 // Book represents a book in the library catalog
 type Book struct {
-	ID              string    `json:"id"`
-	Title           string    `json:"title"`
-	Author          string    `json:"author"`
-	ISBN            string    `json:"isbn"`
-	Category        string    `json:"category"`
-	PublicationYear int       `json:"publication_year"`
-	Description     string    `json:"description"`
-	CreatedAt       time.Time `json:"created_at"`
-	UpdatedAt       time.Time `json:"updated_at"`
+	ID              string     `json:"id"`
+	Title           string     `json:"title"`
+	Author          string     `json:"author"`
+	ISBN            string     `json:"isbn"`
+	Category        string     `json:"category"`
+	PublicationYear int        `json:"publication_year"`
+	Description     string     `json:"description"`
+	CreatedAt       time.Time  `json:"created_at"`
+	UpdatedAt       time.Time  `json:"updated_at"`
 	DeletedAt       *time.Time `json:"deleted_at,omitempty"`
 }
 
