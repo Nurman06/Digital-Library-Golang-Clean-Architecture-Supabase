@@ -97,17 +97,62 @@
 - [ ] 11.3 Implement proper HTTP status codes
 - [ ] 11.4 Add error logging and monitoring
 
-## 12. Performance and Security
-- [ ] 12.1 Add database query optimization
-- [ ] 12.2 Implement API rate limiting
-- [ ] 12.3 Add input sanitization to prevent injection attacks
-- [ ] 12.4 Configure CORS policies
-- [ ] 12.5 Add request/response logging
-- [ ] 12.6 Implement graceful shutdown
+## 12. Performance Optimization
+- [ ] 12.1 Implement database connection pooling (MaxOpenConns: 25, MaxIdleConns: 5)
+- [ ] 12.2 Add database query optimization with prepared statements
+- [ ] 12.3 Create database indexes for common query patterns
+- [ ] 12.4 Implement caching layer (in-memory cache with TTL)
+- [ ] 12.5 Add pagination for large result sets (cursor-based and offset-based)
+- [ ] 12.6 Optimize full-text search queries with GIN indexes
+- [ ] 12.7 Implement batch operations for bulk inserts
+- [ ] 12.8 Add query performance monitoring and logging
+- [ ] 12.9 Set up performance benchmarks and load testing
+- [ ] 12.10 Verify API response times meet targets (< 200ms p95)
 
-## 13. Deployment Preparation
-- [ ] 13.1 Create Dockerfile
-- [ ] 13.2 Set up CI/CD pipeline (GitHub Actions)
-- [ ] 13.3 Configure production environment variables
-- [ ] 13.4 Create deployment documentation
-- [ ] 13.5 Set up monitoring and health check endpoints
+## 13. Security Implementation
+- [ ] 13.1 Add input sanitization to prevent injection attacks
+- [ ] 13.2 Implement API rate limiting (Member: 100 req/min, Librarian: 200 req/min)
+- [ ] 13.3 Configure CORS policies for production
+- [ ] 13.4 Add request/response logging with sensitive data masking
+- [ ] 13.5 Implement HTTPS-only in production
+- [ ] 13.6 Add security headers (HSTS, CSP, X-Frame-Options)
+- [ ] 13.7 Implement SQL injection prevention with parameterized queries
+- [ ] 13.8 Add XSS protection in API responses
+- [ ] 13.9 Implement graceful shutdown for zero-downtime deployments
+- [ ] 13.10 Set up security audit logging
+
+## 14. Monitoring and Observability
+- [ ] 14.1 Implement health check endpoint (GET /health)
+- [ ] 14.2 Add readiness and liveness probes
+- [ ] 14.3 Set up structured logging with log levels
+- [ ] 14.4 Implement metrics collection (Prometheus format)
+- [ ] 14.5 Add performance metrics (response time, throughput, error rate)
+- [ ] 14.6 Set up database query performance tracking
+- [ ] 14.7 Implement distributed tracing (optional)
+- [ ] 14.8 Configure alerting thresholds (response time > 500ms, error rate > 1%)
+- [ ] 14.9 Create monitoring dashboard
+- [ ] 14.10 Set up log aggregation and analysis
+
+## 15. Deployment Preparation
+- [ ] 15.1 Create Dockerfile with multi-stage build
+- [ ] 15.2 Set up CI/CD pipeline (GitHub Actions)
+- [ ] 15.3 Configure production environment variables
+- [ ] 15.4 Create deployment documentation
+- [ ] 15.5 Set up database migration scripts
+- [ ] 15.6 Configure production database (connection pooling, backups)
+- [ ] 15.7 Set up staging environment for testing
+- [ ] 15.8 Implement blue-green deployment strategy
+- [ ] 15.9 Create rollback procedures
+- [ ] 15.10 Verify all performance targets are met before production
+
+## 16. Performance Verification
+- [ ] 16.1 Run load tests with 1000+ concurrent users
+- [ ] 16.2 Verify API response times (< 200ms p95 for all endpoints)
+- [ ] 16.3 Verify database query times (< 50ms p95 for complex queries)
+- [ ] 16.4 Test throughput capacity (500+ req/sec)
+- [ ] 16.5 Verify cache hit rates (> 80% for cached endpoints)
+- [ ] 16.6 Test error handling under load
+- [ ] 16.7 Verify graceful degradation under high load
+- [ ] 16.8 Test database connection pool behavior
+- [ ] 16.9 Verify memory usage stays within limits (< 512MB per instance)
+- [ ] 16.10 Document performance test results and benchmarks
