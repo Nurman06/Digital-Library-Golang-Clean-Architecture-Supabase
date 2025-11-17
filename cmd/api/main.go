@@ -67,7 +67,7 @@ func main() {
 	}
 }
 
-func setupRoutes(router *mux.Router, supabaseClient *supabase.Client, cfg *config.Config, appLogger *logger.Logger) {
+func setupRoutes(router *mux.Router, _ *supabase.Client, _ *config.Config, appLogger *logger.Logger) {
 	// Health check endpoint
 	router.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
