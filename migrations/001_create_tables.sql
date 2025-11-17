@@ -1,13 +1,15 @@
 -- Migration: Create initial database schema for Digital Library System
 -- Version: 001
 -- Description: Creates books, book_copies, users, borrow_records, and reservations tables
+-- Author: Digital Library Team
+-- Date: 2025-01-17
 
--- Enable UUID extension
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+-- Enable UUID extension for gen_random_uuid()
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
 -- Books table
 CREATE TABLE IF NOT EXISTS books (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     title VARCHAR(255) NOT NULL,
     author VARCHAR(255) NOT NULL,
     isbn VARCHAR(13) UNIQUE NOT NULL,
@@ -21,7 +23,7 @@ CREATE TABLE IF NOT EXISTS books (
 
 -- Book copies table (physical/digital copies)
 CREATE TABLE IF NOT EXISTS book_copies (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     book_id UUID REFERENCES books(id) ON DELETE CASCADE,
     copy_number VARCHAR(50) UNIQUE NOT NULL,
     status VARCHAR(20) NOT NULL CHECK (status IN ('available', 'borrowed', 'reserved', 'lost', 'damaged')),
@@ -44,7 +46,7 @@ CREATE TABLE IF NOT EXISTS users (
 
 -- Borrow records table
 CREATE TABLE IF NOT EXISTS borrow_records (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID REFERENCES users(id) ON DELETE RESTRICT,
     book_copy_id UUID REFERENCES book_copies(id) ON DELETE RESTRICT,
     checkout_date TIMESTAMP NOT NULL DEFAULT NOW(),
@@ -59,14 +61,15 @@ CREATE TABLE IF NOT EXISTS borrow_records (
 
 -- Reservations table
 CREATE TABLE IF NOT EXISTS reservations (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID REFERENCES users(id) ON DELETE CASCADE,
     book_id UUID REFERENCES books(id) ON DELETE CASCADE,
     reservation_date TIMESTAMP DEFAULT NOW(),
     expiry_date TIMESTAMP,
     status VARCHAR(20) NOT NULL CHECK (status IN ('pending', 'fulfilled', 'expired', 'cancelled')),
     queue_position INTEGER NOT NULL,
-    created_at TIMESTAMP DEFAULT NOW()
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
 );
 
 -- Create indexes for performance optimization
@@ -119,6 +122,9 @@ CREATE TRIGGER update_users_updated_at BEFORE UPDATE ON users
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 CREATE TRIGGER update_borrow_records_updated_at BEFORE UPDATE ON borrow_records
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER update_reservations_updated_at BEFORE UPDATE ON reservations
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 -- Comments for documentation
