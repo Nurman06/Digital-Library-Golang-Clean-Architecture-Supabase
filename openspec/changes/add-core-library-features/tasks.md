@@ -43,11 +43,11 @@
 - [x] 5.9 Implement due date calculation logic (konstanta sudah ada di entity, perlu di use case)
 
 ## 6. Repository Implementations
-- [ ] 6.1 Implement PostgresBookRepository
-- [ ] 6.2 Implement PostgresUserRepository
-- [ ] 6.3 Implement PostgresBorrowRecordRepository
-- [ ] 6.4 Implement PostgresBookCopyRepository
-- [ ] 6.5 Add error handling and transaction management
+- [x] 6.1 Implement PostgresBookRepository
+- [x] 6.2 Implement PostgresUserRepository
+- [x] 6.3 Implement PostgresBorrowRecordRepository
+- [x] 6.4 Implement PostgresBookCopyRepository
+- [x] 6.5 Add error handling and transaction management
 
 ## 7. HTTP Handlers (API Endpoints)
 - [ ] 7.1 Implement book CRUD endpoints (POST, GET, PUT, DELETE /books)
