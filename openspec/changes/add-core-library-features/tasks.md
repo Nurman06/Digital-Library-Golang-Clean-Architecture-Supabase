@@ -50,19 +50,19 @@
 - [x] 6.5 Add error handling and transaction management
 
 ## 7. HTTP Handlers (API Endpoints)
-- [ ] 7.1 Implement book CRUD endpoints (POST, GET, PUT, DELETE /books)
-- [ ] 7.2 Implement user registration endpoint (POST /auth/register)
-- [ ] 7.3 Implement login endpoint (POST /auth/login)
-- [ ] 7.4 Implement user profile endpoints (GET, PUT /users/{id})
-- [ ] 7.5 Implement borrow book endpoint (POST /borrowing/checkout)
-- [ ] 7.6 Implement return book endpoint (POST /borrowing/return)
-- [ ] 7.7 Implement renew book endpoint (POST /borrowing/renew)
-- [ ] 7.8 Implement borrowing history endpoint (GET /borrowing/history)
-- [ ] 7.9 Implement book search endpoint (GET /books/search)
-- [ ] 7.10 Implement availability check endpoint (GET /books/{id}/availability)
-- [ ] 7.11 Add request validation middleware
-- [ ] 7.12 Add authentication middleware
-- [ ] 7.13 Add authorization middleware (role-based)
+- [x] 7.1 Implement book CRUD endpoints (POST, GET, PUT, DELETE /books)
+- [x] 7.2 Implement user registration endpoint (POST /auth/register)
+- [x] 7.3 Implement login endpoint (POST /auth/login)
+- [x] 7.4 Implement user profile endpoints (GET, PUT /users/{id})
+- [x] 7.5 Implement borrow book endpoint (POST /borrowing/checkout)
+- [x] 7.6 Implement return book endpoint (POST /borrowing/return)
+- [x] 7.7 Implement renew book endpoint (POST /borrowing/renew)
+- [x] 7.8 Implement borrowing history endpoint (GET /borrowing/history)
+- [x] 7.9 Implement book search endpoint (GET /books/search)
+- [x] 7.10 Implement availability check endpoint (GET /books/{id}/availability)
+- [x] 7.11 Add request validation middleware
+- [x] 7.12 Add authentication middleware
+- [x] 7.13 Add authorization middleware (role-based)
 
 ## 8. Authentication & Authorization
 - [ ] 8.1 Integrate Supabase Auth for JWT token generation

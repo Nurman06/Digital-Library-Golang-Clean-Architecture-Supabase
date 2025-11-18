@@ -149,8 +149,7 @@ func setupRoutes(
 	// Protected book routes (Admin/Librarian only)
 	bookProtected := bookRoutes.PathPrefix("").Subrouter()
 	bookProtected.Use(handler.AuthMiddleware)
-	// Note: In production, add role-based middleware here
-	// bookProtected.Use(handler.RequireRole("admin", "librarian"))
+	bookProtected.Use(handler.RequireRole("admin", "librarian"))
 	bookProtected.HandleFunc("", bookHandler.CreateBook).Methods("POST")
 	bookProtected.HandleFunc("/{id}", bookHandler.UpdateBook).Methods("PUT")
 	bookProtected.HandleFunc("/{id}", bookHandler.DeleteBook).Methods("DELETE")
@@ -174,15 +173,14 @@ func setupRoutes(
 	userRoutes.HandleFunc("/profile", userHandler.UpdateUserProfile).Methods("PUT")
 	
 	// Admin-only user routes
-	// Note: In production, add role-based middleware here
-	// userAdminRoutes := userRoutes.PathPrefix("").Subrouter()
-	// userAdminRoutes.Use(handler.RequireRole("admin"))
-	userRoutes.HandleFunc("", userHandler.ListUsers).Methods("GET")
-	userRoutes.HandleFunc("/{id}", userHandler.GetUser).Methods("GET")
-	userRoutes.HandleFunc("/{id}", userHandler.UpdateUser).Methods("PUT")
-	userRoutes.HandleFunc("/{id}", userHandler.DeleteUser).Methods("DELETE")
-	userRoutes.HandleFunc("/{id}/suspend", userHandler.SuspendUser).Methods("POST")
-	userRoutes.HandleFunc("/{id}/activate", userHandler.ActivateUser).Methods("POST")
+	userAdminRoutes := userRoutes.PathPrefix("").Subrouter()
+	userAdminRoutes.Use(handler.RequireRole("admin"))
+	userAdminRoutes.HandleFunc("", userHandler.ListUsers).Methods("GET")
+	userAdminRoutes.HandleFunc("/{id}", userHandler.GetUser).Methods("GET")
+	userAdminRoutes.HandleFunc("/{id}", userHandler.UpdateUser).Methods("PUT")
+	userAdminRoutes.HandleFunc("/{id}", userHandler.DeleteUser).Methods("DELETE")
+	userAdminRoutes.HandleFunc("/{id}/suspend", userHandler.SuspendUser).Methods("POST")
+	userAdminRoutes.HandleFunc("/{id}/activate", userHandler.ActivateUser).Methods("POST")
 
 	appLogger.Info("Routes configured successfully")
 }
