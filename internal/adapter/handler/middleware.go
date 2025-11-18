@@ -60,7 +60,7 @@ func RecoveryMiddleware(log *logger.Logger) func(http.Handler) http.Handler {
 }
 
 // AuthMiddleware validates JWT token and extracts user information
-// Note: This is a placeholder. Actual JWT validation should be implemented with Supabase Auth
+// Note: This is a placeholder implementation. In production, implement proper JWT validation with Supabase Auth
 func AuthMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		authHeader := r.Header.Get("Authorization")
@@ -82,20 +82,28 @@ func AuthMiddleware(next http.Handler) http.Handler {
 			return
 		}
 
-		// TODO: Validate JWT token with Supabase Auth and extract user ID and role
-		// For now, we'll pass through. In production, implement proper JWT validation
-		// userID, role, err := ValidateToken(token)
+		// TODO: Implement proper JWT validation with Supabase Auth
+		// For now, we'll use a placeholder validation
+		// In production, you should:
+		// 1. Validate JWT signature with Supabase public key
+		// 2. Check token expiration
+		// 3. Extract user claims (user_id, role, email)
+		// Example:
+		// userID, role, err := ValidateSupabaseToken(token)
 		// if err != nil {
 		//     ErrorResponse(w, http.StatusUnauthorized, ErrCodeUnauthorized, "Invalid or expired token")
 		//     return
 		// }
 
+		// PLACEHOLDER: Extract mock user info from token
+		// In production, this should come from validated JWT claims
+		userID := "placeholder-user-id"
+		role := "member" // Default role
+		
 		// Add user information to context
-		// ctx := context.WithValue(r.Context(), UserIDKey, userID)
-		// ctx = context.WithValue(ctx, UserRoleKey, role)
-		// next.ServeHTTP(w, r.WithContext(ctx))
-
-		next.ServeHTTP(w, r)
+		ctx := context.WithValue(r.Context(), UserIDKey, userID)
+		ctx = context.WithValue(ctx, UserRoleKey, role)
+		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
 
