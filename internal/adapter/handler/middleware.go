@@ -5,8 +5,9 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/Nurman06/Digital-Library-Golang-Clean-Architecture-Supabase/internal/infrastructure/auth"
 	"github.com/Nurman06/Digital-Library-Golang-Clean-Architecture-Supabase/internal/infrastructure/logger"
+	"github.com/Nurman06/Digital-Library-Golang-Clean-Architecture-Supabase/internal/infrastructure/supabase"
+	"github.com/Nurman06/Digital-Library-Golang-Clean-Architecture-Supabase/internal/usecase"
 )
 
 // ContextKey is a custom type for context keys
@@ -61,7 +62,7 @@ func RecoveryMiddleware(log *logger.Logger) func(http.Handler) http.Handler {
 }
 
 // AuthMiddleware validates JWT token and extracts user information
-func AuthMiddleware(jwtService *auth.JWTService) func(http.Handler) http.Handler {
+func AuthMiddleware(authService *supabase.AuthService, userUseCase usecase.UserUseCase) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			authHeader := r.Header.Get("Authorization")
@@ -83,16 +84,29 @@ func AuthMiddleware(jwtService *auth.JWTService) func(http.Handler) http.Handler
 				return
 			}
 
-			// Validate JWT token
-			claims, err := jwtService.ValidateToken(token)
+			// Verify token with Supabase Auth
+			authUser, err := authService.VerifyToken(r.Context(), token)
 			if err != nil {
 				ErrorResponse(w, http.StatusUnauthorized, ErrCodeUnauthorized, "Invalid or expired token")
 				return
 			}
 
+			// Get user from database to get role and status
+			user, err := userUseCase.GetUserByID(r.Context(), authUser.ID)
+			if err != nil {
+				ErrorResponse(w, http.StatusUnauthorized, ErrCodeUnauthorized, "User not found")
+				return
+			}
+
+			// Check user status
+			if !user.IsActive() {
+				ErrorResponse(w, http.StatusForbidden, ErrCodeForbidden, "Account is not active")
+				return
+			}
+
 			// Add user information to context
-			ctx := context.WithValue(r.Context(), UserIDKey, claims.UserID)
-			ctx = context.WithValue(ctx, UserRoleKey, claims.Role)
+			ctx := context.WithValue(r.Context(), UserIDKey, user.ID)
+			ctx = context.WithValue(ctx, UserRoleKey, string(user.Role))
 			next.ServeHTTP(w, r.WithContext(ctx))
 		})
 	}

@@ -7,10 +7,11 @@ import (
 )
 
 // User represents a library user
+// Note: Authentication is handled by Supabase Auth (auth.users table)
+// This table extends auth.users with library-specific information
 type User struct {
-	ID             string     `json:"id"`
+	ID             string     `json:"id"` // References auth.users(id)
 	Email          string     `json:"email"`
-	PasswordHash   string     `json:"-"` // Never expose password hash in JSON
 	FullName       string     `json:"full_name"`
 	Role           UserRole   `json:"role"`
 	Status         UserStatus `json:"status"`
