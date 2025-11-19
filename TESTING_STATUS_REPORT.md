@@ -8,9 +8,9 @@
 This report provides a detailed analysis of the testing status for Section 9 (Testing) from the project tasks. Out of 10 testing tasks, **8 have been completed** with 2 remaining tasks that require additional infrastructure setup.
 
 ### Overall Test Coverage
-- **Total Coverage:** 17.2%
+- **Total Coverage:** 19.1% ✅ (updated from 17.2%)
 - **Entity Layer:** 82.6% ✅
-- **Usecase Layer:** 29.6% (improved from 15.4%)
+- **Usecase Layer:** 34.4% ✅ (improved from 29.6%)
 - **Handler Layer:** 15.8%
 - **Infrastructure/Repository:** 0.0% (requires integration test setup)
 
@@ -77,28 +77,42 @@ This report provides a detailed analysis of the testing status for Section 9 (Te
   - RenewBook
   - GetBorrowingHistory
 
-#### 9.6 ✅ Unit tests for SearchUseCase
-- **File:** `internal/usecase/search_usecase_test.go` (PR #19 - merged to main)
-- **Lines:** 389
-- **Test Functions:** 4
-- **Status:** ✅ Merged via PR #19
-- **Key Tests:**
-  - SearchBooks with filters
-  - SearchByAuthor
-  - SearchByCategory
-  - SearchByISBN
+#### 9.6 ✅ Unit tests for SearchUseCase, AuthUseCase, and UserUseCase
+- **SearchUseCase File:** [`internal/usecase/search_usecase_test.go`](internal/usecase/search_usecase_test.go)
+  - **Lines:** 369
+  - **Test Functions:** 4
+  - **Status:** ✅ Merged to main
+  - **Key Tests:** SearchBooks, SearchByAuthor, SearchByCategory, SearchByISBN
 
-#### 9.8 ✅ API endpoint tests (Partial)
-- **File:** `internal/adapter/handler/book_handler_test.go` (PR #20 - merged to main)
+- **AuthUseCase File:** [`internal/usecase/auth_usecase_test.go`](internal/usecase/auth_usecase_test.go)
+  - **Lines:** 629
+  - **Test Functions:** 8
+  - **Status:** ✅ Merged to main
+  - **Key Tests:** Login, ValidateUser, CheckPermission, CanUserBorrow, CanUserManageBooks, CanUserManageUsers, GetUserRole, ValidateUserStatus
+
+- **UserUseCase File:** [`internal/usecase/user_usecase_test.go`](internal/usecase/user_usecase_test.go)
+  - **Lines:** 540
+  - **Test Functions:** 6
+  - **Status:** ✅ Merged to main
+  - **Key Tests:** RegisterUser, GetUserByID, DeleteUser, SuspendUser, UpdateBorrowingLimit, ListUsers, SearchUsers
+
+#### 9.8 ✅ API endpoint tests (Partial - BookHandler only)
+- **File:** [`internal/adapter/handler/book_handler_test.go`](internal/adapter/handler/book_handler_test.go)
 - **Lines:** 718
 - **Test Functions:** 5
-- **Status:** ✅ Merged via PR #20
+- **Status:** ✅ Merged to main
+- **Coverage:** 15.8% of handler layer
 - **Key Tests:**
   - POST /books (CreateBook)
   - GET /books/:id (GetBook)
   - GET /books (ListBooks)
   - PUT /books/:id (UpdateBook)
   - DELETE /books/:id (DeleteBook)
+- **Missing Handler Tests:**
+  - AuthHandler (login, register endpoints)
+  - BorrowingHandler (checkout, return, renew endpoints)
+  - UserHandler (user management endpoints)
+  - AvailabilityHandler (availability check endpoints)
 
 #### 9.9 ✅ Test database and fixtures
 - **File:** [`internal/usecase/testdata/fixtures.go`](internal/usecase/testdata/fixtures.go)
@@ -110,52 +124,6 @@ This report provides a detailed analysis of the testing status for Section 9 (Te
   - Test borrow record fixtures
   - Helper functions for test data generation
 
----
-
-### 🆕 New Tests Created (This Session)
-
-#### AuthUseCase Tests (PR #21)
-- **File:** [`internal/usecase/auth_usecase_test.go`](internal/usecase/auth_usecase_test.go)
-- **Lines:** 413
-- **Test Functions:** 8
-- **Status:** 🆕 PR #21 Created
-- **Key Tests:**
-  - Login with valid/invalid credentials
-  - ValidateUser
-  - CheckPermission (role-based)
-  - CanUserBorrow
-  - CanUserManageBooks
-  - CanUserManageUsers
-  - GetUserRole
-  - ValidateUserStatus
-
-#### UserUseCase Tests (PR #21)
-- **File:** [`internal/usecase/user_usecase_test.go`](internal/usecase/user_usecase_test.go)
-- **Lines:** 549
-- **Test Functions:** 6
-- **Status:** 🆕 PR #21 Created
-- **Key Tests:**
-  - RegisterUser with validation
-  - GetUserByID
-  - DeleteUser (with constraints)
-  - SuspendUser
-  - UpdateBorrowingLimit
-  - ListUsers with pagination
-  - SearchUsers
-
-#### Mock Repository Updates (PR #21)
-- **File:** [`internal/usecase/mocks/mock_repositories.go`](internal/usecase/mocks/mock_repositories.go)
-- **Status:** 🆕 Updated in PR #21
-- **New Mock Methods:**
-  - GetByEmailFunc
-  - ExistsByEmailFunc
-  - DeleteFunc
-  - ListFunc
-  - SearchFunc
-  - UpdateStatusFunc
-  - UpdateBorrowingLimitFunc
-
----
 
 ### ❌ Remaining Tasks (2/10)
 
@@ -175,29 +143,26 @@ This report provides a detailed analysis of the testing status for Section 9 (Te
   - `internal/repository/postgres_book_copy_repository.go`
 
 #### 9.10 ❌ Achieve >80% code coverage for business logic
-- **Current Status:** 17.2% overall
+- **Current Status:** 19.1% overall ⬆️ (improved from 17.2%)
 - **Layer Breakdown:**
   - ✅ Entity Layer: 82.6% (meets target)
-  - ❌ Usecase Layer: 29.6% (needs 50.4% more)
+  - ⚠️ Usecase Layer: 34.4% ⬆️ (improved from 29.6%, needs 45.6% more)
   - ❌ Handler Layer: 15.8% (needs 64.2% more)
   - ❌ Repository Layer: 0.0% (needs integration tests)
 - **Remaining Work:**
-  - Complete handler tests (Auth, Borrowing, User, Availability)
+  - Complete handler tests (Auth, Borrowing, User, Availability handlers)
   - Add integration tests for repositories
-  - Test remaining usecase methods (GetUserByEmail, UpdateUser, etc.)
+  - Test remaining usecase methods (GetUserByEmail, UpdateUser, ActivateUser, ExpireUser, etc.)
   - Test infrastructure layer (optional, but would improve coverage)
 
 ---
 
 ## Pull Request Summary
 
-### Merged PRs
+### All Tests Merged to Main ✅
 1. **PR #19** - SearchUseCase tests ✅ Merged
 2. **PR #20** - BookHandler API tests ✅ Merged
-
-### Open PRs
-3. **PR #21** - AuthUseCase and UserUseCase tests 🆕 Open
-   - Link: https://github.com/Nurman06/Digital-Library-Golang-Clean-Architecture-Supabase/pull/21
+3. **PR #21** - AuthUseCase and UserUseCase tests ✅ Merged
 
 ---
 
@@ -211,14 +176,14 @@ BorrowRecord entity: 100% ✅
 BookCopy entity:     100% ✅
 ```
 
-### Usecase Layer (29.6%)
+### Usecase Layer (34.4% ⬆️)
 ```
-BookUseCase:      ~70% ✅
-BorrowingUseCase: ~75% ✅
-SearchUseCase:     0% ❌ (tests exist but not counted - PR #19 merged)
-AuthUseCase:      ~60% 🆕 (PR #21)
-UserUseCase:      ~70% 🆕 (PR #21)
-AvailabilityUseCase: 0% ❌
+BookUseCase:         ~70% ✅
+BorrowingUseCase:    ~75% ✅
+SearchUseCase:       ~65% ✅ (tests merged)
+AuthUseCase:         ~60% ✅ (tests merged)
+UserUseCase:         ~70% ✅ (tests merged)
+AvailabilityUseCase:  0% ❌ (no tests)
 ```
 
 ### Handler Layer (15.8%)
@@ -240,8 +205,7 @@ All repositories: 0% ❌ (requires integration tests)
 ## Recommendations
 
 ### High Priority
-1. **Merge PR #21** - AuthUseCase and UserUseCase tests
-2. **Complete Handler Tests** - Add tests for remaining handlers:
+1. **Complete Handler Tests** - Add tests for remaining handlers:
    - AuthHandler (login, register endpoints)
    - BorrowingHandler (checkout, return, renew endpoints)
    - UserHandler (user management endpoints)

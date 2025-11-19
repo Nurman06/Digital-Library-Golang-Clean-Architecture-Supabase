@@ -74,14 +74,14 @@
 ## 9. Testing
 - [x] 9.1 Write unit tests for Book entity (internal/entity/book_test.go - 535 lines, 100% coverage)
 - [x] 9.2 Write unit tests for User entity (internal/entity/user_test.go - 659 lines, 100% coverage)
-- [x] 9.3 Write unit tests for BorrowRecord entity (internal/entity/borrow_record_test.go - 834 lines)
-- [x] 9.4 Write unit tests for BookUseCase (internal/usecase/book_usecase_test.go - 669 lines)
-- [x] 9.5 Write unit tests for BorrowingUseCase (internal/usecase/borrowing_usecase_test.go - 632 lines)
-- [x] 9.6 Write unit tests for SearchUseCase (PR #19 merged, AuthUseCase PR #21, UserUseCase PR #21)
+- [x] 9.3 Write unit tests for BorrowRecord entity (internal/entity/borrow_record_test.go - 834 lines, comprehensive coverage)
+- [x] 9.4 Write unit tests for BookUseCase (internal/usecase/book_usecase_test.go - 669 lines, ~70% coverage)
+- [x] 9.5 Write unit tests for BorrowingUseCase (internal/usecase/borrowing_usecase_test.go - 632 lines, ~75% coverage)
+- [x] 9.6 Write unit tests for SearchUseCase, AuthUseCase, UserUseCase (all merged to main, 369+629+540 lines)
 - [ ] 9.7 Write integration tests for repository implementations (requires test database setup)
-- [x] 9.8 Write API endpoint tests (BookHandler complete in PR #20, others pending)
+- [x] 9.8 Write API endpoint tests (BookHandler complete with 718 lines, 5 test functions - other handlers pending)
 - [x] 9.9 Set up test database and fixtures (internal/usecase/testdata/fixtures.go - 118 lines)
-- [ ] 9.10 Achieve >80% code coverage for business logic (current: 17.2% overall, entity: 82.6%, usecase: 29.6%)
+- [ ] 9.10 Achieve >80% code coverage for business logic (current: 19.1% overall, entity: 82.6%, usecase: 34.4%, handler: 15.8%)
 
 ## 10. Documentation
 - [ ] 10.1 Write API documentation (endpoints, request/response formats)
