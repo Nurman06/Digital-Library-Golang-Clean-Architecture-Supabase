@@ -55,6 +55,10 @@ func main() {
 	bookCopyRepo := repository.NewPostgresBookCopyRepository(supabaseClient.DB)
 	// reservationRepo := repository.NewPostgresReservationRepository(supabaseClient.DB)
 
+	// Initialize Supabase Auth service
+	authService := supabase.NewAuthService(supabaseClient.AuthClient)
+	appLogger.Info("Supabase Auth service initialized successfully")
+
 	// Initialize use cases
 	authUseCase := usecase.NewAuthUseCase(userRepo)
 	userUseCase := usecase.NewUserUseCase(userRepo, borrowRecordRepo)
@@ -64,7 +68,7 @@ func main() {
 	// availabilityUseCase := usecase.NewAvailabilityUseCase(bookRepo, bookCopyRepo, borrowRecordRepo, reservationRepo, userRepo)
 
 	// Initialize handlers
-	authHandler := handler.NewAuthHandler(authUseCase, userUseCase, appLogger)
+	authHandler := handler.NewAuthHandler(authUseCase, userUseCase, authService, appLogger)
 	bookHandler := handler.NewBookHandler(bookUseCase, authUseCase, appLogger)
 	borrowingHandler := handler.NewBorrowingHandler(borrowingUseCase, bookUseCase, userUseCase, appLogger)
 	userHandler := handler.NewUserHandler(userUseCase, authUseCase, appLogger)
@@ -83,7 +87,7 @@ func main() {
 	router := httpServer.GetRouter()
 
 	// Setup routes
-	setupRoutes(router, authHandler, bookHandler, borrowingHandler, userHandler, availabilityHandler, appLogger)
+	setupRoutes(router, authHandler, bookHandler, borrowingHandler, userHandler, availabilityHandler, authService, userUseCase, appLogger)
 
 	// Start server
 	appLogger.Infof("Server starting on %s:%s", cfg.Server.Host, cfg.Server.Port)
@@ -99,6 +103,8 @@ func setupRoutes(
 	borrowingHandler *handler.BorrowingHandler,
 	userHandler *handler.UserHandler,
 	availabilityHandler *handler.AvailabilityHandler,
+	authService *supabase.AuthService,
+	userUseCase usecase.UserUseCase,
 	appLogger *logger.Logger,
 ) {
 	// Apply global middleware
@@ -127,11 +133,13 @@ func setupRoutes(
 	authRoutes := apiV1.PathPrefix("/auth").Subrouter()
 	authRoutes.HandleFunc("/register", authHandler.Register).Methods("POST")
 	authRoutes.HandleFunc("/login", authHandler.Login).Methods("POST")
+	authRoutes.HandleFunc("/refresh", authHandler.RefreshToken).Methods("POST")
 	
 	// Protected auth routes
 	authProtected := authRoutes.PathPrefix("").Subrouter()
-	authProtected.Use(handler.AuthMiddleware)
+	authProtected.Use(handler.AuthMiddleware(authService, userUseCase))
 	authProtected.HandleFunc("/profile", authHandler.GetProfile).Methods("GET")
+	authProtected.HandleFunc("/change-password", authHandler.ChangePassword).Methods("POST")
 
 	// Book routes
 	bookRoutes := apiV1.PathPrefix("/books").Subrouter()
@@ -148,20 +156,20 @@ func setupRoutes(
 	
 	// Protected book routes for create/update (Admin/Librarian only)
 	bookModify := bookRoutes.PathPrefix("").Subrouter()
-	bookModify.Use(handler.AuthMiddleware)
+	bookModify.Use(handler.AuthMiddleware(authService, userUseCase))
 	bookModify.Use(handler.RequireRole("admin", "librarian"))
 	bookModify.HandleFunc("", bookHandler.CreateBook).Methods("POST")
 	bookModify.HandleFunc("/{id}", bookHandler.UpdateBook).Methods("PUT")
 	
 	// Protected book routes for delete (Admin only)
 	bookDelete := bookRoutes.PathPrefix("").Subrouter()
-	bookDelete.Use(handler.AuthMiddleware)
+	bookDelete.Use(handler.AuthMiddleware(authService, userUseCase))
 	bookDelete.Use(handler.RequireRole("admin"))
 	bookDelete.HandleFunc("/{id}", bookHandler.DeleteBook).Methods("DELETE")
 
 	// Borrowing routes (all protected)
 	borrowingRoutes := apiV1.PathPrefix("/borrowing").Subrouter()
-	borrowingRoutes.Use(handler.AuthMiddleware)
+	borrowingRoutes.Use(handler.AuthMiddleware(authService, userUseCase))
 	borrowingRoutes.HandleFunc("/checkout", borrowingHandler.CheckoutBook).Methods("POST")
 	borrowingRoutes.HandleFunc("/return", borrowingHandler.ReturnBook).Methods("POST")
 	borrowingRoutes.HandleFunc("/renew", borrowingHandler.RenewBook).Methods("POST")
@@ -172,7 +180,7 @@ func setupRoutes(
 
 	// User routes
 	userRoutes := apiV1.PathPrefix("/users").Subrouter()
-	userRoutes.Use(handler.AuthMiddleware)
+	userRoutes.Use(handler.AuthMiddleware(authService, userUseCase))
 	
 	// User profile routes (any authenticated user)
 	userRoutes.HandleFunc("/profile", userHandler.UpdateUserProfile).Methods("PUT")

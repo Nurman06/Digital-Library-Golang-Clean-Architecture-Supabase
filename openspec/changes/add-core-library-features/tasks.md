@@ -65,11 +65,11 @@
 - [x] 7.13 Add authorization middleware (role-based)
 
 ## 8. Authentication & Authorization
-- [ ] 8.1 Integrate Supabase Auth for JWT token generation
-- [ ] 8.2 Implement JWT token validation middleware
-- [ ] 8.3 Implement role-based access control (RBAC)
-- [ ] 8.4 Add password hashing and validation
-- [ ] 8.5 Implement token refresh mechanism
+- [x] 8.1 Integrate Supabase Auth for JWT token generation
+- [x] 8.2 Implement JWT token validation middleware
+- [x] 8.3 Implement role-based access control (RBAC)
+- [x] 8.4 Add password hashing and validation
+- [x] 8.5 Implement token refresh mechanism
 
 ## 9. Testing
 - [ ] 9.1 Write unit tests for Book entity

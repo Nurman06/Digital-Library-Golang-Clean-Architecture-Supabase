@@ -6,6 +6,8 @@ import (
 	"strings"
 
 	"github.com/Nurman06/Digital-Library-Golang-Clean-Architecture-Supabase/internal/infrastructure/logger"
+	"github.com/Nurman06/Digital-Library-Golang-Clean-Architecture-Supabase/internal/infrastructure/supabase"
+	"github.com/Nurman06/Digital-Library-Golang-Clean-Architecture-Supabase/internal/usecase"
 )
 
 // ContextKey is a custom type for context keys
@@ -60,51 +62,54 @@ func RecoveryMiddleware(log *logger.Logger) func(http.Handler) http.Handler {
 }
 
 // AuthMiddleware validates JWT token and extracts user information
-// Note: This is a placeholder implementation. In production, implement proper JWT validation with Supabase Auth
-func AuthMiddleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		authHeader := r.Header.Get("Authorization")
-		if authHeader == "" {
-			ErrorResponse(w, http.StatusUnauthorized, ErrCodeUnauthorized, "Authorization header is required")
-			return
-		}
+func AuthMiddleware(authService *supabase.AuthService, userUseCase usecase.UserUseCase) func(http.Handler) http.Handler {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			authHeader := r.Header.Get("Authorization")
+			if authHeader == "" {
+				ErrorResponse(w, http.StatusUnauthorized, ErrCodeUnauthorized, "Authorization header is required")
+				return
+			}
 
-		// Extract token from "Bearer <token>"
-		parts := strings.Split(authHeader, " ")
-		if len(parts) != 2 || parts[0] != "Bearer" {
-			ErrorResponse(w, http.StatusUnauthorized, ErrCodeUnauthorized, "Invalid authorization header format")
-			return
-		}
+			// Extract token from "Bearer <token>"
+			parts := strings.Split(authHeader, " ")
+			if len(parts) != 2 || parts[0] != "Bearer" {
+				ErrorResponse(w, http.StatusUnauthorized, ErrCodeUnauthorized, "Invalid authorization header format")
+				return
+			}
 
-		token := parts[1]
-		if token == "" {
-			ErrorResponse(w, http.StatusUnauthorized, ErrCodeUnauthorized, "Token is required")
-			return
-		}
+			token := parts[1]
+			if token == "" {
+				ErrorResponse(w, http.StatusUnauthorized, ErrCodeUnauthorized, "Token is required")
+				return
+			}
 
-		// TODO: Implement proper JWT validation with Supabase Auth
-		// For now, we'll use a placeholder validation
-		// In production, you should:
-		// 1. Validate JWT signature with Supabase public key
-		// 2. Check token expiration
-		// 3. Extract user claims (user_id, role, email)
-		// Example:
-		// userID, role, err := ValidateSupabaseToken(token)
-		// if err != nil {
-		//     ErrorResponse(w, http.StatusUnauthorized, ErrCodeUnauthorized, "Invalid or expired token")
-		//     return
-		// }
+			// Verify token with Supabase Auth
+			authUser, err := authService.VerifyToken(r.Context(), token)
+			if err != nil {
+				ErrorResponse(w, http.StatusUnauthorized, ErrCodeUnauthorized, "Invalid or expired token")
+				return
+			}
 
-		// PLACEHOLDER: Extract mock user info from token
-		// In production, this should come from validated JWT claims
-		userID := "placeholder-user-id"
-		role := "member" // Default role
-		
-		// Add user information to context
-		ctx := context.WithValue(r.Context(), UserIDKey, userID)
-		ctx = context.WithValue(ctx, UserRoleKey, role)
-		next.ServeHTTP(w, r.WithContext(ctx))
-	})
+			// Get user from database to get role and status
+			user, err := userUseCase.GetUserByID(r.Context(), authUser.ID)
+			if err != nil {
+				ErrorResponse(w, http.StatusUnauthorized, ErrCodeUnauthorized, "User not found")
+				return
+			}
+
+			// Check user status
+			if !user.IsActive() {
+				ErrorResponse(w, http.StatusForbidden, ErrCodeForbidden, "Account is not active")
+				return
+			}
+
+			// Add user information to context
+			ctx := context.WithValue(r.Context(), UserIDKey, user.ID)
+			ctx = context.WithValue(ctx, UserRoleKey, string(user.Role))
+			next.ServeHTTP(w, r.WithContext(ctx))
+		})
+	}
 }
 
 // RequireRole creates a middleware that checks if user has required role

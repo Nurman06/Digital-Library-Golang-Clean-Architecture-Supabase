@@ -6,12 +6,14 @@ import (
 	"time"
 
 	_ "github.com/lib/pq"
+	supa "github.com/supabase-community/supabase-go"
 )
 
 // Client represents a Supabase client
 type Client struct {
-	DB  *sql.DB
-	URL string
+	DB         *sql.DB
+	URL        string
+	AuthClient *supa.Client
 }
 
 // Config holds Supabase client configuration
@@ -43,9 +45,16 @@ func NewClient(config Config) (*Client, error) {
 		return nil, fmt.Errorf("failed to ping database: %w", err)
 	}
 
+	// Initialize Supabase Go client for Auth
+	supabaseClient, err := supa.NewClient(config.URL, config.AnonKey, &supa.ClientOptions{})
+	if err != nil {
+		return nil, fmt.Errorf("failed to create supabase client: %w", err)
+	}
+
 	return &Client{
-		DB:  db,
-		URL: config.URL,
+		DB:         db,
+		URL:        config.URL,
+		AuthClient: supabaseClient,
 	}, nil
 }
 
