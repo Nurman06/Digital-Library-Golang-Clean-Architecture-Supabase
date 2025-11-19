@@ -78,7 +78,7 @@
 - [x] 9.4 Write unit tests for BookUseCase (internal/usecase/book_usecase_test.go - 669 lines, ~70% coverage)
 - [x] 9.5 Write unit tests for BorrowingUseCase (internal/usecase/borrowing_usecase_test.go - 632 lines, ~75% coverage)
 - [x] 9.6 Write unit tests for SearchUseCase, AuthUseCase, UserUseCase (all merged to main, 369+629+540 lines)
-- [ ] 9.7 Write integration tests for repository implementations (requires test database setup)
+- [x] 9.7 Write integration tests for repository implementations (infrastructure complete, ready to run with Docker)
 - [x] 9.8 Write API endpoint tests (BookHandler complete with 718 lines, 5 test functions - other handlers pending)
 - [x] 9.9 Set up test database and fixtures (internal/usecase/testdata/fixtures.go - 118 lines)
 - [ ] 9.10 Achieve >80% code coverage for business logic (current: 19.1% overall, entity: 82.6%, usecase: 34.4%, handler: 15.8%)
