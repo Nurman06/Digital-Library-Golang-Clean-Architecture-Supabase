@@ -184,6 +184,25 @@ func (s *AuthService) VerifyToken(ctx context.Context, token string) (*AuthUser,
 		Email: user.Email,
 	}, nil
 }
+// UpdatePasswordRequest represents a password update request
+type UpdatePasswordRequest struct {
+	AccessToken string
+	NewPassword string
+}
+
+// UpdatePassword updates a user's password
+func (s *AuthService) UpdatePassword(ctx context.Context, req UpdatePasswordRequest) error {
+	// Update password using Supabase Auth
+	// Note: Supabase Auth requires the user to be authenticated (valid access token)
+	// The access token should be set in the client before calling UpdateUser
+	_, err := s.client.Auth.UpdateUser(types.UpdateUserRequest{
+		Password: &req.NewPassword,
+	})
+	if err != nil {
+		return fmt.Errorf("failed to update password: %w", err)
+	}
+	return nil
+}
 
 // SignOut signs out a user
 func (s *AuthService) SignOut(ctx context.Context, token string) error {

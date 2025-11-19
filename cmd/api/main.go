@@ -139,6 +139,7 @@ func setupRoutes(
 	authProtected := authRoutes.PathPrefix("").Subrouter()
 	authProtected.Use(handler.AuthMiddleware(authService, userUseCase))
 	authProtected.HandleFunc("/profile", authHandler.GetProfile).Methods("GET")
+	authProtected.HandleFunc("/change-password", authHandler.ChangePassword).Methods("POST")
 
 	// Book routes
 	bookRoutes := apiV1.PathPrefix("/books").Subrouter()

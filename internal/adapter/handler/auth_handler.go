@@ -3,6 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/Nurman06/Digital-Library-Golang-Clean-Architecture-Supabase/internal/entity"
@@ -253,4 +254,78 @@ func (h *AuthHandler) GetProfile(w http.ResponseWriter, r *http.Request) {
 	}
 
 	SuccessResponse(w, http.StatusOK, userResp)
+}
+
+// ChangePassword handles password change for authenticated user
+// POST /api/v1/auth/change-password
+func (h *AuthHandler) ChangePassword(w http.ResponseWriter, r *http.Request) {
+	var req ChangePasswordRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		ErrorResponse(w, http.StatusBadRequest, ErrCodeBadRequest, "Invalid request body")
+		return
+	}
+
+	// Validate request
+	if req.CurrentPassword == "" {
+		ErrorResponse(w, http.StatusBadRequest, ErrCodeValidation, "Current password is required")
+		return
+	}
+	if req.NewPassword == "" {
+		ErrorResponse(w, http.StatusBadRequest, ErrCodeValidation, "New password is required")
+		return
+	}
+	if len(req.NewPassword) < 8 {
+		ErrorResponse(w, http.StatusBadRequest, ErrCodeValidation, "New password must be at least 8 characters")
+		return
+	}
+
+	// Get user ID from context
+	userID, ok := GetUserIDFromContext(r.Context())
+	if !ok {
+		ErrorResponse(w, http.StatusUnauthorized, ErrCodeUnauthorized, "User not authenticated")
+		return
+	}
+
+	// Get user to verify current password
+	user, err := h.userUseCase.GetUserByID(r.Context(), userID)
+	if err != nil {
+		h.logger.Errorf("Failed to get user: %v", err)
+		ErrorResponse(w, http.StatusNotFound, ErrCodeNotFound, "User not found")
+		return
+	}
+
+	// Verify current password by attempting to sign in
+	_, err = h.authService.SignIn(r.Context(), supabase.SignInRequest{
+		Email:    user.Email,
+		Password: req.CurrentPassword,
+	})
+	if err != nil {
+		h.logger.Errorf("Current password verification failed: %v", err)
+		ErrorResponse(w, http.StatusUnauthorized, ErrCodeUnauthorized, "Current password is incorrect")
+		return
+	}
+
+	// Get access token from Authorization header
+	authHeader := r.Header.Get("Authorization")
+	parts := strings.Split(authHeader, " ")
+	if len(parts) != 2 {
+		ErrorResponse(w, http.StatusUnauthorized, ErrCodeUnauthorized, "Invalid authorization header")
+		return
+	}
+	accessToken := parts[1]
+
+	// Update password via Supabase Auth
+	err = h.authService.UpdatePassword(r.Context(), supabase.UpdatePasswordRequest{
+		AccessToken: accessToken,
+		NewPassword: req.NewPassword,
+	})
+	if err != nil {
+		h.logger.Errorf("Failed to update password: %v", err)
+		ErrorResponse(w, http.StatusInternalServerError, ErrCodeInternal, "Failed to update password")
+		return
+	}
+
+	SuccessResponse(w, http.StatusOK, map[string]string{
+		"message": "Password updated successfully",
+	})
 }
