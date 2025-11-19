@@ -25,8 +25,8 @@ func NewPostgresUserRepository(db *sql.DB) *PostgresUserRepository {
 // Create creates a new user in the repository
 func (r *PostgresUserRepository) Create(ctx context.Context, user *entity.User) error {
 	query := `
-		INSERT INTO users (id, email, full_name, role, status, borrowing_limit, created_at, updated_at)
-		VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+		INSERT INTO users (id, email, password_hash, full_name, role, status, borrowing_limit, created_at, updated_at)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
 	`
 
 	now := time.Now()
@@ -36,6 +36,7 @@ func (r *PostgresUserRepository) Create(ctx context.Context, user *entity.User) 
 	_, err := r.db.ExecContext(ctx, query,
 		user.ID,
 		user.Email,
+		user.PasswordHash,
 		user.FullName,
 		user.Role,
 		user.Status,
@@ -54,7 +55,7 @@ func (r *PostgresUserRepository) Create(ctx context.Context, user *entity.User) 
 // GetByID retrieves a user by their ID
 func (r *PostgresUserRepository) GetByID(ctx context.Context, id string) (*entity.User, error) {
 	query := `
-		SELECT id, email, full_name, role, status, borrowing_limit, created_at, updated_at
+		SELECT id, email, password_hash, full_name, role, status, borrowing_limit, created_at, updated_at
 		FROM users
 		WHERE id = $1
 	`
@@ -63,6 +64,7 @@ func (r *PostgresUserRepository) GetByID(ctx context.Context, id string) (*entit
 	err := r.db.QueryRowContext(ctx, query, id).Scan(
 		&user.ID,
 		&user.Email,
+		&user.PasswordHash,
 		&user.FullName,
 		&user.Role,
 		&user.Status,
@@ -84,7 +86,7 @@ func (r *PostgresUserRepository) GetByID(ctx context.Context, id string) (*entit
 // GetByEmail retrieves a user by their email address
 func (r *PostgresUserRepository) GetByEmail(ctx context.Context, email string) (*entity.User, error) {
 	query := `
-		SELECT id, email, full_name, role, status, borrowing_limit, created_at, updated_at
+		SELECT id, email, password_hash, full_name, role, status, borrowing_limit, created_at, updated_at
 		FROM users
 		WHERE email = $1
 	`
@@ -93,6 +95,7 @@ func (r *PostgresUserRepository) GetByEmail(ctx context.Context, email string) (
 	err := r.db.QueryRowContext(ctx, query, email).Scan(
 		&user.ID,
 		&user.Email,
+		&user.PasswordHash,
 		&user.FullName,
 		&user.Role,
 		&user.Status,

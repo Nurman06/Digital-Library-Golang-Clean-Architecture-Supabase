@@ -19,8 +19,20 @@ type LoginRequest struct {
 
 // LoginResponse represents a login response
 type LoginResponse struct {
-	User  *UserResponse `json:"user"`
-	Token string        `json:"token"`
+	User         *UserResponse `json:"user"`
+	Token        string        `json:"token"`
+	RefreshToken string        `json:"refresh_token"`
+}
+
+// RefreshTokenRequest represents a token refresh request
+type RefreshTokenRequest struct {
+	RefreshToken string `json:"refresh_token"`
+}
+
+// RefreshTokenResponse represents a token refresh response
+type RefreshTokenResponse struct {
+	Token        string `json:"token"`
+	RefreshToken string `json:"refresh_token"`
 }
 
 // UserResponse represents a user in API responses

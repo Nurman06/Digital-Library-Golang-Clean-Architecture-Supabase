@@ -10,6 +10,7 @@ import (
 type User struct {
 	ID             string     `json:"id"`
 	Email          string     `json:"email"`
+	PasswordHash   string     `json:"-"` // Never expose password hash in JSON
 	FullName       string     `json:"full_name"`
 	Role           UserRole   `json:"role"`
 	Status         UserStatus `json:"status"`

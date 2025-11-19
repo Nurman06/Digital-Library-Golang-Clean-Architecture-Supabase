@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/Nurman06/Digital-Library-Golang-Clean-Architecture-Supabase/internal/infrastructure/auth"
 	"github.com/Nurman06/Digital-Library-Golang-Clean-Architecture-Supabase/internal/infrastructure/logger"
 )
 
@@ -60,51 +61,41 @@ func RecoveryMiddleware(log *logger.Logger) func(http.Handler) http.Handler {
 }
 
 // AuthMiddleware validates JWT token and extracts user information
-// Note: This is a placeholder implementation. In production, implement proper JWT validation with Supabase Auth
-func AuthMiddleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		authHeader := r.Header.Get("Authorization")
-		if authHeader == "" {
-			ErrorResponse(w, http.StatusUnauthorized, ErrCodeUnauthorized, "Authorization header is required")
-			return
-		}
+func AuthMiddleware(jwtService *auth.JWTService) func(http.Handler) http.Handler {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			authHeader := r.Header.Get("Authorization")
+			if authHeader == "" {
+				ErrorResponse(w, http.StatusUnauthorized, ErrCodeUnauthorized, "Authorization header is required")
+				return
+			}
 
-		// Extract token from "Bearer <token>"
-		parts := strings.Split(authHeader, " ")
-		if len(parts) != 2 || parts[0] != "Bearer" {
-			ErrorResponse(w, http.StatusUnauthorized, ErrCodeUnauthorized, "Invalid authorization header format")
-			return
-		}
+			// Extract token from "Bearer <token>"
+			parts := strings.Split(authHeader, " ")
+			if len(parts) != 2 || parts[0] != "Bearer" {
+				ErrorResponse(w, http.StatusUnauthorized, ErrCodeUnauthorized, "Invalid authorization header format")
+				return
+			}
 
-		token := parts[1]
-		if token == "" {
-			ErrorResponse(w, http.StatusUnauthorized, ErrCodeUnauthorized, "Token is required")
-			return
-		}
+			token := parts[1]
+			if token == "" {
+				ErrorResponse(w, http.StatusUnauthorized, ErrCodeUnauthorized, "Token is required")
+				return
+			}
 
-		// TODO: Implement proper JWT validation with Supabase Auth
-		// For now, we'll use a placeholder validation
-		// In production, you should:
-		// 1. Validate JWT signature with Supabase public key
-		// 2. Check token expiration
-		// 3. Extract user claims (user_id, role, email)
-		// Example:
-		// userID, role, err := ValidateSupabaseToken(token)
-		// if err != nil {
-		//     ErrorResponse(w, http.StatusUnauthorized, ErrCodeUnauthorized, "Invalid or expired token")
-		//     return
-		// }
+			// Validate JWT token
+			claims, err := jwtService.ValidateToken(token)
+			if err != nil {
+				ErrorResponse(w, http.StatusUnauthorized, ErrCodeUnauthorized, "Invalid or expired token")
+				return
+			}
 
-		// PLACEHOLDER: Extract mock user info from token
-		// In production, this should come from validated JWT claims
-		userID := "placeholder-user-id"
-		role := "member" // Default role
-		
-		// Add user information to context
-		ctx := context.WithValue(r.Context(), UserIDKey, userID)
-		ctx = context.WithValue(ctx, UserRoleKey, role)
-		next.ServeHTTP(w, r.WithContext(ctx))
-	})
+			// Add user information to context
+			ctx := context.WithValue(r.Context(), UserIDKey, claims.UserID)
+			ctx = context.WithValue(ctx, UserRoleKey, claims.Role)
+			next.ServeHTTP(w, r.WithContext(ctx))
+		})
+	}
 }
 
 // RequireRole creates a middleware that checks if user has required role
