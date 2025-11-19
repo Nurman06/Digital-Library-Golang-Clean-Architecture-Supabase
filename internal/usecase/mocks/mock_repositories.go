@@ -238,9 +238,16 @@ func (m *MockBookCopyRepository) List(ctx context.Context, params repository.Lis
 
 // MockUserRepository is a mock implementation of UserRepository
 type MockUserRepository struct {
-	CreateFunc  func(ctx context.Context, user *entity.User) error
-	GetByIDFunc func(ctx context.Context, id string) (*entity.User, error)
-	UpdateFunc  func(ctx context.Context, user *entity.User) error
+	CreateFunc              func(ctx context.Context, user *entity.User) error
+	GetByIDFunc             func(ctx context.Context, id string) (*entity.User, error)
+	GetByEmailFunc          func(ctx context.Context, email string) (*entity.User, error)
+	UpdateFunc              func(ctx context.Context, user *entity.User) error
+	DeleteFunc              func(ctx context.Context, id string) error
+	ListFunc                func(ctx context.Context, params repository.UserListParams) ([]*entity.User, int64, error)
+	SearchFunc              func(ctx context.Context, query string, params repository.UserListParams) ([]*entity.User, int64, error)
+	ExistsByEmailFunc       func(ctx context.Context, email string) (bool, error)
+	UpdateStatusFunc        func(ctx context.Context, id string, status entity.UserStatus) error
+	UpdateBorrowingLimitFunc func(ctx context.Context, id string, limit int) error
 }
 
 func (m *MockUserRepository) Create(ctx context.Context, user *entity.User) error {
@@ -265,14 +272,23 @@ func (m *MockUserRepository) Update(ctx context.Context, user *entity.User) erro
 }
 
 func (m *MockUserRepository) GetByEmail(ctx context.Context, email string) (*entity.User, error) {
+	if m.GetByEmailFunc != nil {
+		return m.GetByEmailFunc(ctx, email)
+	}
 	return nil, nil
 }
 
 func (m *MockUserRepository) Delete(ctx context.Context, id string) error {
+	if m.DeleteFunc != nil {
+		return m.DeleteFunc(ctx, id)
+	}
 	return nil
 }
 
 func (m *MockUserRepository) List(ctx context.Context, params repository.UserListParams) ([]*entity.User, int64, error) {
+	if m.ListFunc != nil {
+		return m.ListFunc(ctx, params)
+	}
 	return nil, 0, nil
 }
 
@@ -297,14 +313,23 @@ func (m *MockUserRepository) CountByStatus(ctx context.Context, status entity.Us
 }
 
 func (m *MockUserRepository) ExistsByEmail(ctx context.Context, email string) (bool, error) {
+	if m.ExistsByEmailFunc != nil {
+		return m.ExistsByEmailFunc(ctx, email)
+	}
 	return false, nil
 }
 
 func (m *MockUserRepository) UpdateStatus(ctx context.Context, id string, status entity.UserStatus) error {
+	if m.UpdateStatusFunc != nil {
+		return m.UpdateStatusFunc(ctx, id, status)
+	}
 	return nil
 }
 
 func (m *MockUserRepository) UpdateBorrowingLimit(ctx context.Context, id string, limit int) error {
+	if m.UpdateBorrowingLimitFunc != nil {
+		return m.UpdateBorrowingLimitFunc(ctx, id, limit)
+	}
 	return nil
 }
 
@@ -313,6 +338,9 @@ func (m *MockUserRepository) GetActiveMembers(ctx context.Context, params reposi
 }
 
 func (m *MockUserRepository) Search(ctx context.Context, query string, params repository.UserListParams) ([]*entity.User, int64, error) {
+	if m.SearchFunc != nil {
+		return m.SearchFunc(ctx, query, params)
+	}
 	return nil, 0, nil
 }
 
