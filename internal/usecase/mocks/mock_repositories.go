@@ -2,6 +2,7 @@ package mocks
 
 import (
 	"context"
+	"time"
 
 	"github.com/Nurman06/Digital-Library-Golang-Clean-Architecture-Supabase/internal/entity"
 	"github.com/Nurman06/Digital-Library-Golang-Clean-Architecture-Supabase/internal/repository"
@@ -263,6 +264,58 @@ func (m *MockUserRepository) Update(ctx context.Context, user *entity.User) erro
 	return nil
 }
 
+func (m *MockUserRepository) GetByEmail(ctx context.Context, email string) (*entity.User, error) {
+	return nil, nil
+}
+
+func (m *MockUserRepository) Delete(ctx context.Context, id string) error {
+	return nil
+}
+
+func (m *MockUserRepository) List(ctx context.Context, params repository.UserListParams) ([]*entity.User, int64, error) {
+	return nil, 0, nil
+}
+
+func (m *MockUserRepository) GetByRole(ctx context.Context, role entity.UserRole, params repository.UserListParams) ([]*entity.User, int64, error) {
+	return nil, 0, nil
+}
+
+func (m *MockUserRepository) GetByStatus(ctx context.Context, status entity.UserStatus, params repository.UserListParams) ([]*entity.User, int64, error) {
+	return nil, 0, nil
+}
+
+func (m *MockUserRepository) Count(ctx context.Context) (int64, error) {
+	return 0, nil
+}
+
+func (m *MockUserRepository) CountByRole(ctx context.Context, role entity.UserRole) (int64, error) {
+	return 0, nil
+}
+
+func (m *MockUserRepository) CountByStatus(ctx context.Context, status entity.UserStatus) (int64, error) {
+	return 0, nil
+}
+
+func (m *MockUserRepository) ExistsByEmail(ctx context.Context, email string) (bool, error) {
+	return false, nil
+}
+
+func (m *MockUserRepository) UpdateStatus(ctx context.Context, id string, status entity.UserStatus) error {
+	return nil
+}
+
+func (m *MockUserRepository) UpdateBorrowingLimit(ctx context.Context, id string, limit int) error {
+	return nil
+}
+
+func (m *MockUserRepository) GetActiveMembers(ctx context.Context, params repository.UserListParams) ([]*entity.User, int64, error) {
+	return nil, 0, nil
+}
+
+func (m *MockUserRepository) Search(ctx context.Context, query string, params repository.UserListParams) ([]*entity.User, int64, error) {
+	return nil, 0, nil
+}
+
 // MockBorrowRecordRepository is a mock implementation of BorrowRecordRepository
 type MockBorrowRecordRepository struct {
 	CreateFunc                    func(ctx context.Context, record *entity.BorrowRecord) error
@@ -372,9 +425,46 @@ func (m *MockBorrowRecordRepository) GetUserBorrowingStatistics(ctx context.Cont
 	return nil, nil
 }
 
-func (m *MockBorrowRecordRepository) GetMostBorrowedBooks(ctx context.Context, limit int, startDate, endDate interface{}) ([]repository.BorrowStatistic, error) {
-	if m.GetMostBorrowedBooksFunc != nil {
-		return m.GetMostBorrowedBooksFunc(ctx, limit, startDate, endDate)
-	}
+func (m *MockBorrowRecordRepository) GetMostBorrowedBooks(ctx context.Context, limit int, startDate, endDate time.Time) ([]repository.BorrowStatistic, error) {
+	return nil, nil
+}
+
+func (m *MockBorrowRecordRepository) CountOverdueByUserID(ctx context.Context, userID string) (int64, error) {
+	return 0, nil
+}
+
+func (m *MockBorrowRecordRepository) Delete(ctx context.Context, id string) error {
+	return nil
+}
+
+func (m *MockBorrowRecordRepository) List(ctx context.Context, params repository.BorrowRecordListParams) ([]*entity.BorrowRecord, int64, error) {
+	return nil, 0, nil
+}
+
+func (m *MockBorrowRecordRepository) GetByUserID(ctx context.Context, userID string, params repository.BorrowRecordListParams) ([]*entity.BorrowRecord, int64, error) {
+	return nil, 0, nil
+}
+
+func (m *MockBorrowRecordRepository) GetByBookCopyID(ctx context.Context, bookCopyID string, params repository.BorrowRecordListParams) ([]*entity.BorrowRecord, int64, error) {
+	return nil, 0, nil
+}
+
+func (m *MockBorrowRecordRepository) GetByDateRange(ctx context.Context, startDate, endDate time.Time, params repository.BorrowRecordListParams) ([]*entity.BorrowRecord, int64, error) {
+	return nil, 0, nil
+}
+
+func (m *MockBorrowRecordRepository) GetBookBorrowingHistory(ctx context.Context, bookCopyID string, params repository.BorrowRecordListParams) ([]*entity.BorrowRecord, int64, error) {
+	return nil, 0, nil
+}
+
+func (m *MockBorrowRecordRepository) MarkAsReturned(ctx context.Context, id string, returnDate time.Time) error {
+	return nil
+}
+
+func (m *MockBorrowRecordRepository) HasActiveBookCopyBorrow(ctx context.Context, bookCopyID string) (bool, error) {
+	return false, nil
+}
+
+func (m *MockBorrowRecordRepository) GetActiveByBookCopyID(ctx context.Context, bookCopyID string) (*entity.BorrowRecord, error) {
 	return nil, nil
 }
