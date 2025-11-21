@@ -496,3 +496,131 @@ func (m *MockBorrowRecordRepository) HasActiveBookCopyBorrow(ctx context.Context
 func (m *MockBorrowRecordRepository) GetActiveByBookCopyID(ctx context.Context, bookCopyID string) (*entity.BorrowRecord, error) {
 	return nil, nil
 }
+
+// MockReservationRepository is a mock implementation of ReservationRepository
+type MockReservationRepository struct {
+	CreateFunc                 func(ctx context.Context, reservation *entity.Reservation) error
+	GetByIDFunc                func(ctx context.Context, id string) (*entity.Reservation, error)
+	UpdateFunc                 func(ctx context.Context, reservation *entity.Reservation) error
+	DeleteFunc                 func(ctx context.Context, id string) error
+	GetPendingByUserIDFunc     func(ctx context.Context, userID string) ([]*entity.Reservation, error)
+	GetPendingByBookIDFunc     func(ctx context.Context, bookID string) ([]*entity.Reservation, error)
+	CountPendingByBookIDFunc   func(ctx context.Context, bookID string) (int64, error)
+	CountPendingByUserIDFunc   func(ctx context.Context, userID string) (int64, error)
+	HasActiveReservationFunc   func(ctx context.Context, userID, bookID string) (bool, error)
+	UpdateStatusFunc           func(ctx context.Context, id string, status entity.ReservationStatus) error
+	GetExpiredReservationsFunc func(ctx context.Context) ([]*entity.Reservation, error)
+	ListFunc                   func(ctx context.Context, params repository.ReservationListParams) ([]*entity.Reservation, int64, error)
+}
+
+func (m *MockReservationRepository) Create(ctx context.Context, reservation *entity.Reservation) error {
+	if m.CreateFunc != nil {
+		return m.CreateFunc(ctx, reservation)
+	}
+	return nil
+}
+
+func (m *MockReservationRepository) GetByID(ctx context.Context, id string) (*entity.Reservation, error) {
+	if m.GetByIDFunc != nil {
+		return m.GetByIDFunc(ctx, id)
+	}
+	return nil, nil
+}
+
+func (m *MockReservationRepository) Update(ctx context.Context, reservation *entity.Reservation) error {
+	if m.UpdateFunc != nil {
+		return m.UpdateFunc(ctx, reservation)
+	}
+	return nil
+}
+
+func (m *MockReservationRepository) Delete(ctx context.Context, id string) error {
+	if m.DeleteFunc != nil {
+		return m.DeleteFunc(ctx, id)
+	}
+	return nil
+}
+
+func (m *MockReservationRepository) GetPendingByUserID(ctx context.Context, userID string) ([]*entity.Reservation, error) {
+	if m.GetPendingByUserIDFunc != nil {
+		return m.GetPendingByUserIDFunc(ctx, userID)
+	}
+	return nil, nil
+}
+
+func (m *MockReservationRepository) GetPendingByBookID(ctx context.Context, bookID string) ([]*entity.Reservation, error) {
+	if m.GetPendingByBookIDFunc != nil {
+		return m.GetPendingByBookIDFunc(ctx, bookID)
+	}
+	return nil, nil
+}
+
+func (m *MockReservationRepository) CountPendingByBookID(ctx context.Context, bookID string) (int64, error) {
+	if m.CountPendingByBookIDFunc != nil {
+		return m.CountPendingByBookIDFunc(ctx, bookID)
+	}
+	return 0, nil
+}
+
+func (m *MockReservationRepository) CountPendingByUserID(ctx context.Context, userID string) (int64, error) {
+	if m.CountPendingByUserIDFunc != nil {
+		return m.CountPendingByUserIDFunc(ctx, userID)
+	}
+	return 0, nil
+}
+
+func (m *MockReservationRepository) HasActiveReservation(ctx context.Context, userID, bookID string) (bool, error) {
+	if m.HasActiveReservationFunc != nil {
+		return m.HasActiveReservationFunc(ctx, userID, bookID)
+	}
+	return false, nil
+}
+
+func (m *MockReservationRepository) UpdateStatus(ctx context.Context, id string, status entity.ReservationStatus) error {
+	if m.UpdateStatusFunc != nil {
+		return m.UpdateStatusFunc(ctx, id, status)
+	}
+	return nil
+}
+
+func (m *MockReservationRepository) GetExpiredReservations(ctx context.Context) ([]*entity.Reservation, error) {
+	if m.GetExpiredReservationsFunc != nil {
+		return m.GetExpiredReservationsFunc(ctx)
+	}
+	return nil, nil
+}
+
+func (m *MockReservationRepository) List(ctx context.Context, params repository.ReservationListParams) ([]*entity.Reservation, int64, error) {
+	if m.ListFunc != nil {
+		return m.ListFunc(ctx, params)
+	}
+	return nil, 0, nil
+}
+
+func (m *MockReservationRepository) GetByUserID(ctx context.Context, userID string, params repository.ReservationListParams) ([]*entity.Reservation, int64, error) {
+	return nil, 0, nil
+}
+
+func (m *MockReservationRepository) GetByBookID(ctx context.Context, bookID string, params repository.ReservationListParams) ([]*entity.Reservation, int64, error) {
+	return nil, 0, nil
+}
+
+func (m *MockReservationRepository) GetByStatus(ctx context.Context, status entity.ReservationStatus, params repository.ReservationListParams) ([]*entity.Reservation, int64, error) {
+	return nil, 0, nil
+}
+
+func (m *MockReservationRepository) GetNextInQueue(ctx context.Context, bookID string) (*entity.Reservation, error) {
+	return nil, nil
+}
+
+func (m *MockReservationRepository) UpdateQueuePosition(ctx context.Context, id string, position int) error {
+	return nil
+}
+
+func (m *MockReservationRepository) FulfillReservation(ctx context.Context, id string) error {
+	return nil
+}
+
+func (m *MockReservationRepository) ExpireReservation(ctx context.Context, id string) error {
+	return nil
+}
